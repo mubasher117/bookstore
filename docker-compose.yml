@@ -42,7 +42,7 @@ services:
       dockerfile: Dockerfile
     command: celery -A bookstore worker --beat --loglevel=info
     environment:
-      - DATABASE_URL=postgres://user:password@db/bookstore
+      - DATABASE_URL=postgres://admin:123456@db/bookstore
       - BROKER_URL=redis://redis:6379/0
     depends_on:
       - db
