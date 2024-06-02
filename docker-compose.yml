@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://admin:123456@db/bookstore
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_HOST_USER=info@mubasher.site
+      - EMAIL_HOST_PASSWORD=email@123
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=bookstore
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123456
+
+  redis:
+    image: redis:6
+    volumes:
+      - redis_data:/data
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A bookstore worker --beat --loglevel=info
+    environment:
+      - DATABASE_URL=postgres://user:password@db/bookstore
+      - BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
+  redis_data:
