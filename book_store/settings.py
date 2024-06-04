@@ -69,15 +69,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'book_store.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'your_db_name', 
+#         'USER': 'postgres',
+#         'PASSWORD': 'your_db_password',
+#         'HOST': '127.0.0.1', 
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -125,10 +133,17 @@ REST_FRAMEWORK = {
     ),  
 }
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "emailCreatedOnlyForApp@myDomain.com"
+EMAIL_HOST_PASSWORD = "abcdefghijklmnop"
+
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    'TITLE': 'Book Store',
+    'DESCRIPTION': 'Book store using Django REST Framework',
     'VERSION': '1.0.0',
     'USE_SESSION_AUTH': False,
 }
@@ -137,3 +152,10 @@ from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10000),
 }
+
+# Celery Settings 
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379' 
+CELERY_ACCEPT_CONTENT = ['application/json'] 
+CELERY_RESULT_SERIALIZER = 'json' 
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
